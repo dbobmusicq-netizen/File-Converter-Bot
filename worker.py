@@ -1,8 +1,12 @@
 import os
 import time
 import asyncio
+import uvloop
 import shutil
 from pyrogram import Client
+
+# This overrides Python's default async engine with the C-based engine
+uvloop.install()
 
 API_ID = os.environ.get("API_ID")
 API_HASH = os.environ.get("API_HASH")
