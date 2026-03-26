@@ -1,24 +1,55 @@
+# ==========================================
+# 1. CORE TELEGRAM & ASYNC ACCELERATORS
+# ==========================================
 pyrogram==2.0.106
-tgcrypto==1.2.3
-pickle5==0.0.11
-telegraph==2.1.0
-pykeyboard==0.1.5
-halo==0.0.31
-Wand==0.6.8
-tensorflow-cpu==2.9.1
-requests
-SpeechRecognition
-pydub
-gTTS
-Pillow
-bs4
-ttconv
-py2many
-pyzbar
-pyinstaller
-asteval
-arrow
-plotly
-kaleido
-websocket-client
-flask
+tgcrypto==1.2.3        # MTProto encryption in C (4x faster downloads/uploads)
+cryptography           # Required fallback for modern Pyrogram security
+uvloop                 # TRICK 1: Replaces Python's asyncio loop with a C-loop (makes async code 2x-4x faster)
+
+# ==========================================
+# 2. NETWORK & PARSING ACCELERATORS
+# ==========================================
+requests               # Standard HTTP requests
+urllib3[secure]        # TRICK 2: Adds C-optimized TLS/SSL connections for requests
+ujson                  # TRICK 3: Ultra-fast JSON parsing written in C
+orjson                 # TRICK 4: The absolute fastest JSON parser written in Rust
+websocket-client       # Used for HuggingFace spaces
+wsaccel                # TRICK 5: C-extension accelerator for websocket-client
+bs4                    # BeautifulSoup HTML parsing
+lxml                   # TRICK 6: C-based XML/HTML parser (makes bs4 10x faster)
+cchardet               # TRICK 7: C-based character encoding detector (speeds up requests & bs4)
+
+# ==========================================
+# 3. MEDIA, AUDIO & IMAGES
+# ==========================================
+Pillow>=10.0.0         # TRICK 8: Pillow v10+ has native SIMD C-optimizations
+Wand>=0.6.13           # Updated ImageMagick binding for better stability
+pydub                  # Audio processing
+SpeechRecognition      # Audio to text
+gTTS                   # Text to speech
+ttconv                 # Subtitles
+pyzbar                 # QR/Barcode
+
+# ==========================================
+# 4. AI & DATA PROCESSING
+# ==========================================
+tensorflow-cpu>=2.15.0 # TRICK 9: Updated TF-CPU uses AVX2/FMA CPU instructions for much faster inference
+plotly                 # Point-E graphing
+kaleido                # Static export for plotly
+
+# ==========================================
+# 5. UTILITIES & MISC
+# ==========================================
+arrow                  # Fast Date/Time manipulation
+asteval                # Safe math evaluation
+py2many                # Code transpiler
+pyinstaller            # Python to binary
+pykeyboard==0.1.5      # Legacy inline keyboards
+halo==0.0.31           # Terminal spinners
+telegraph==2.1.0       # Telegram's telegraph API
+
+# ==========================================
+# 6. WEB SERVER (STABILITY)
+# ==========================================
+flask                  # Web framework
+gunicorn               # TRICK 10: Replaces Flask's weak dev server with a Production-Grade WSGI Server
