@@ -23,15 +23,17 @@ jobs:
       - name: Checkout Repository
         uses: actions/checkout@v3
 
-      - name: Install System Dependencies (FFmpeg, ImageMagick, LibreOffice)
+      # TRICK 1: --no-install-recommends skips bloatware, saving ~1-2 minutes of setup time
+      - name: Install System Dependencies (Extremely Fast)
         run: |
-          sudo apt-get update
-          sudo apt-get install -y ffmpeg imagemagick libreoffice
+          sudo apt-get update -qq
+          sudo apt-get install -y --no-install-recommends ffmpeg imagemagick libreoffice calibre
 
       - name: Set up Python
         uses: actions/setup-python@v4
         with:
           python-version: '3.10'
+          cache: 'pip' # TRICK 2: Caches pip installs for future runs
 
       - name: Install Python Dependencies
         run: pip install -r requirements.txt
