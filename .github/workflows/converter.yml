@@ -1,0 +1,48 @@
+name: TBC Advanced Converter Worker
+
+on:
+  workflow_dispatch:
+    inputs:
+      chat_id:
+        description: 'Telegram Chat ID'
+        required: true
+      message_id:
+        description: 'Original Message ID containing the file'
+        required: true
+      status_msg_id:
+        description: 'Message ID of the TBC status message to edit'
+        required: true
+      target_format:
+        description: 'Format to convert to'
+        required: true
+
+jobs:
+  convert-file:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v3
+
+      - name: Install System Dependencies (FFmpeg, ImageMagick, LibreOffice)
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y ffmpeg imagemagick libreoffice
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.10'
+
+      - name: Install Python Dependencies
+        run: pip install -r requirements.txt
+
+      - name: Run Converter Worker
+        env:
+          API_ID: ${{ secrets.API_ID }}
+          API_HASH: ${{ secrets.API_HASH }}
+          BOT_TOKEN: ${{ secrets.BOT_TOKEN }}
+          CHAT_ID: ${{ github.event.inputs.chat_id }}
+          MESSAGE_ID: ${{ github.event.inputs.message_id }}
+          STATUS_MSG_ID: ${{ github.event.inputs.status_msg_id }}
+          TARGET_FORMAT: ${{ github.event.inputs.target_format }}
+        run: python worker.py
